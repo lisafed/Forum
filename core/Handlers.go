@@ -174,15 +174,7 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-/*
-import (
-	"database/sql"
-	"fmt"
-	"golang.org/x/crypto/bcrypt"
-	"net/http"
-)
-
-type Register struct {
+/* type Register struct {
 	//Template *template.Template
 	DB       *sql.DB
 	Error    bool

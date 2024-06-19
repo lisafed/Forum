@@ -67,7 +67,7 @@ func InitDatabase(dbname string) *sql.DB {
 	return db
 }
 
-func InsertIntoUsers(db *sql.DB, name string, email string, password string) (int64, error) {
+func InserttoUsers(db *sql.DB, name string, email string, password string) (int64, error) {
 	query1 := `INSERT INTO User (Name, Email, PasswordHash) VALUES (?, ?, ?)`
 	stmt, err := db.Prepare(query1)
 	if err != nil {
@@ -143,6 +143,111 @@ func SelectUserNameWithPattern(db *sql.DB, pattern string) []User {
 	return users
 }
 
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+// Post Management
+
+// SelectPostById selects a post by its ID from the Posts table.
+func SelectPostById(db *sql.DB, id int) Post {
+	query := `SELECT PostID, UserID, CategoryID, Title, Content FROM Posts WHERE PostID = ?`
+	row := db.QueryRow(query, id)
+	var post Post
+	err := row.Scan(&post.PostID, &post.UserID, &post.CategoryID, &post.Title, &post.Content)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("No post found with ID %d", id)
+		} else {
+			log.Fatalf("Scan: %v", err)
+		}
+	}
+	return post
+}
+
+// SelectPostByUser selects all posts by a specified user from the Posts table.
+func SelectPostByUser(db *sql.DB, userID int) []Post {
+	query := `SELECT PostID, UserID, CategoryID, Title, Content FROM Posts WHERE UserID = ?`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return nil
+	}
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		var post Post
+		err = rows.Scan(&post.PostID, &post.UserID, &post.CategoryID, &post.Title, &post.Content)
+		if err != nil {
+			log.Fatalf("Scan: %v", err)
+		}
+		posts = append(posts, post)
+	}
+	return posts
+}
+
+// InsertIntoContent inserts a new post into the Posts table.
+func InsertIntoContent(db *sql.DB, title string, content string, category_id, user_id int) (int64, error) {
+	query := `INSERT INTO Posts (UserID, CategoryID, Title, Content) VALUES (?, ?, ?, ?)`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(user_id, category_id, title, content)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
+// DeletePostFromId deletes a post by its ID from the Posts table.
+func DeletePostFromId(db *sql.DB, id int) (int64, error) {
+	query := `DELETE FROM Posts WHERE PostID = ?`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("RowsAffected: %v", err)
+		return 0, err
+	}
+	return rowsAffected, nil
+}
+
+// Likes, Dislikes, and Other Reactions Management
+
+// SelectLikeById2 selects a like by PostID and UserID from the Like table.
+func SelectLikeById2(db *sql.DB, postID, userID int) Like {
+	query := `SELECT ID, PostID, UserID FROM Like WHERE PostID = ? AND UserID = ?`
+	row := db.QueryRow(query, postID, userID)
+	var like Like
+	err := row.Scan(&like.ID, &like.PostID, &like.UserID)
+	if err != nil {
+		log.Fatalf("Scan: %v", err)
+	}
+	return like
+}
+
 func InsertIntoLike(db *sql.DB, postID, userID int) (int64, error) {
 	query := `INSERT INTO Like (PostID, UserID) VALUES (?, ?)`
 	stmt, err := db.Prepare(query)
@@ -160,8 +265,68 @@ func InsertIntoLike(db *sql.DB, postID, userID int) (int64, error) {
 	return result.LastInsertId()
 }
 
-func SelectLikeById(db *sql.DB, postID int) []Like {
-	query := `SELECT ID, PostID, UserID FROM Like WHERE PostID = ?`
+// InsertIntoDislike inserts a new dislike into the Dislike table.
+func InsertIntoDislike(db *sql.DB, postID, userID int) (int64, error) {
+	query := `INSERT INTO Dislike (PostID, UserID) VALUES (?, ?)`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(postID, userID)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
+// DeleteLikeFromId deletes a like (or other reaction) by its ID from the specified table.
+func DeleteLikeFromId(db *sql.DB, table string, id int) (int64, error) {
+	query := `DELETE FROM ` + table + ` WHERE ID = ?`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("RowsAffected: %v", err)
+		return 0, err
+	}
+	return rowsAffected, nil
+}
+
+// InsertComment inserts a new comment into the Comments table.
+func InsertComment(db *sql.DB, postID, userID int, content string) (int64, error) {
+	query := `INSERT INTO Comments (PostID, UserID, Content) VALUES (?, ?, ?)`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(postID, userID, content)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
+// SelectCommentsByPostID selects all comments for a specified post.
+func SelectCommentsByPostID(db *sql.DB, postID int) []Comment {
+	query := `SELECT CommentID, PostID, UserID, Content FROM Comments WHERE PostID = ?`
 	rows, err := db.Query(query, postID)
 	if err != nil {
 		log.Printf("%q: %s\n", err, query)
@@ -169,35 +334,37 @@ func SelectLikeById(db *sql.DB, postID int) []Like {
 	}
 	defer rows.Close()
 
-	likes := []Like{}
+	var comments []Comment
 	for rows.Next() {
-		var like Like
-		err = rows.Scan(&like.ID, &like.PostID, &like.UserID)
+		var comment Comment
+		err = rows.Scan(&comment.CommentID, &comment.PostID, &comment.UserID, &comment.Content)
 		if err != nil {
 			log.Fatalf("Scan: %v", err)
 		}
-		likes = append(likes, like)
+		comments = append(comments, comment)
 	}
-	return likes
+	return comments
 }
 
-func SelectLikeById2(db *sql.DB, postID, userID int) Like {
-	query := `SELECT ID, PostID, UserID FROM Like WHERE PostID = ? AND UserID = ?`
-	row := db.QueryRow(query, postID, userID)
-	var like Like
-	err := row.Scan(&like.ID, &like.PostID, &like.UserID)
+// DeleteCommentByID deletes a comment by its ID from the Comments table.
+func DeleteCommentByID(db *sql.DB, id int) (int64, error) {
+	query := `DELETE FROM Comments WHERE CommentID = ?`
+	stmt, err := db.Prepare(query)
 	if err != nil {
-		log.Fatalf("Scan: %v", err)
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
 	}
-	return like
-}
+	defer stmt.Close()
 
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+	result, err := stmt.Exec(id)
+	if err != nil {
+		log.Printf("%q: %s\n", err, query)
+		return 0, err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("RowsAffected: %v", err)
+		return 0, err
+	}
+	return rowsAffected, nil
 }

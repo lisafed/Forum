@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Réseau Social</title>
+    <link rel="stylesheet" href="ind.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="images/logo.jpg" alt="Logo" class="logo-image">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="notifications.html">Notifications</a></li>
+            <li><a href="messages.html">Messages</a></li>
+            <li><a href="communities.html">Communities / category</a></li>
+            <li><a href="profile.html">Profil</a></li>
+            <li><a href="more.html">More</a></li>
+        </ul>
+        <button class="createPostBtn post-button">Post</button>
+        <div id="postModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Nouvelle publication</h2>
+                <textarea id="postContent" placeholder="Écrivez votre publication ici..."></textarea>
+                <input type="file" id="imageUpload" accept="image/*" multiple>
+                <button id="publishBtn">Publier</button>
+            </div>
+        </div>
+
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <h2>Êtes-vous sûr de vouloir quitter ?</h2>
+                <p>Vos modifications non sauvegardées seront perdues.</p>
+                <button id="deleteBtn">Supprimer</button>
+                <button id="continueBtn">Continuer</button>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h2>Notifications</h2>
+            <li><a href="#" onclick="window.location.href='register.html'">Logout</a></li>
+        </div>
+        <div class="notification-list">
+            <!-- Liste des notifications ici -->
+        </div>
+    </div>
+    <div class="trending">
+        <h2>Trending</h2>
+        <ul>
+            <li># Famous Pilate</li>
+            <li># New brand "CERAve"</li>
+            <li># Skincare</li>
+        </ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

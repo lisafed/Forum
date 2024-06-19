@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 80vh;
+    background-color: #d995db;
+    color: #fff;
+    
+    background-image: url('https://i.pinimg.com/564x/f8/b0/2c/f8b02c2f3284aed8e58d5a05f1f4ddf6.jpg');
+    background-size: cover; /* Cela permet à l'image de couvrir tout l'arrière-plan */
+    background-position: center; /* Cela centre l'image dans l'arrière-plan */
+    
+}
+
+header, footer {
+    background-color: #000000;
+    color: white;
+    text-align: center;
+    padding: 3em;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+nav ul li a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    padding: 0.5em;
+}
+
+nav ul li a:hover {
+    background-color: #000000;
+    border-radius: 5px;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.section p {
+    color: #000000;
+    line-height: 1.6;
+}
+
+.section img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+footer p {
+    margin: 0;
+}

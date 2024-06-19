@@ -1,0 +1,196 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('https://i.pinimg.com/564x/f8/b0/2c/f8b02c2f3284aed8e58d5a05f1f4ddf6.jpg');
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.profile-container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* En-tête du profil */
+.profile-header {
+    position: relative;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.profile-logo {
+    width: 115px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid white;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.profile-name {
+    font-size: 2em;
+    margin: 10px 0 5px 0;
+}
+
+.profile-bio {
+    font-size: 1em;
+    margin: 0;
+}
+
+/* Contenu principal du profil */
+.profile-content {
+    display: flex;
+}
+
+.profile-main {
+    flex: 3;
+    padding: 20px;
+}
+
+.profile-sidebar {
+    flex: 1;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 1px solid #ddd;
+}
+
+.profile-sidebar h2 {
+    color: #ffffff;
+}
+
+.profile-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-sidebar li {
+    margin: 10px 0;
+}
+
+.profile-sidebar a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+.profile-sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Détails du profil */
+.profile-details h2,
+.profile-interests h2,
+.profile-edit h2 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.profile-details ul,
+.profile-interests ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-details li,
+.profile-interests li {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.profile-details li strong {
+    display: inline-block;
+    width: 100px;
+}
+
+.profile-edit form {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-edit label {
+    margin: 10px 0 5px 0;
+}
+
+.profile-edit input,
+.profile-edit textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.profile-edit input[type="file"] {
+    padding: 5px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+#interests-inputs input {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.profile-edit button {
+    padding: 10px;
+    background-color: #9f16df;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-edit button:hover {
+    background-color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .profile-container {
+        width: 100%;
+    }
+
+    .profile-logo {
+        width: 30px;
+        top: 10px;
+        left: 10px;
+    }
+
+    .profile-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-header {
+        padding: 20px 10px;
+    }
+
+    .profile-name {
+        font-size: 1.5em;
+    }
+
+    .profile-content {
+        flex-direction: column;
+   
+    }

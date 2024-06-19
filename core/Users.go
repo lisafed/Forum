@@ -1,5 +1,6 @@
-package structs
+package core
 
+/*
 import (
 	"database/sql"
 	"fmt"
@@ -7,14 +8,13 @@ import (
 	"time"
 )
 
-// User représente un utilisateur
-type User struct {
-	UserID           int       // Identifiant unique de l'utilisateur
-	Email            string    // Email de l'utilisateur, doit être unique
-	Name             string    // Nom de l'utilisateur
-	PasswordHash     string    // Hash du mot de passe de l'utilisateur
-	RegistrationDate time.Time // Date et heure de l'inscription
-}
+
+import (
+	"database/sql"
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
+	"time"
+)
 
 // UserService gère les opérations liées aux utilisateurs
 type UserService struct {
@@ -153,3 +153,4 @@ func (s *UserService) LogoutUser(sessionID string) error {
 	}
 	return nil
 }
+*/
